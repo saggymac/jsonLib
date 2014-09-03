@@ -242,7 +242,7 @@ public class JSDecoder {
                 if var obj = top.accum as? JSObject {
                     if let key = top.str {
                         
-                        obj[ key] = ( (objContext.array != nil) ? objContext.array : objContext.accum )
+                        obj[ key] = ( (objContext.array != nil) ? objContext.array : objContext.accum ) as Any?
                         top.str = nil
                         top.accum = obj
                         var newState = JSState( state: .Comma, handler:commaHandler)
