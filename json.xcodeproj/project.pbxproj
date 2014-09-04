@@ -31,6 +31,7 @@
 		CD5E956219AECF7900A283C8 /* streamingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5E956119AECF7900A283C8 /* streamingTests.swift */; };
 		CD5E956519AED63300A283C8 /* simpleMultipart1.json in Resources */ = {isa = PBXBuildFile; fileRef = CD5E956319AED63300A283C8 /* simpleMultipart1.json */; };
 		CD5E956619AED63300A283C8 /* simpleMultipart2.json in Resources */ = {isa = PBXBuildFile; fileRef = CD5E956419AED63300A283C8 /* simpleMultipart2.json */; };
+		CD6ABEBA19B7B626003D7CA1 /* nestedEmptyArray.json in Resources */ = {isa = PBXBuildFile; fileRef = CD6ABEB919B7B626003D7CA1 /* nestedEmptyArray.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		CD5E956119AECF7900A283C8 /* streamingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = streamingTests.swift; sourceTree = "<group>"; };
 		CD5E956319AED63300A283C8 /* simpleMultipart1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = simpleMultipart1.json; sourceTree = "<group>"; };
 		CD5E956419AED63300A283C8 /* simpleMultipart2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = simpleMultipart2.json; sourceTree = "<group>"; };
+		CD6ABEB919B7B626003D7CA1 /* nestedEmptyArray.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nestedEmptyArray.json; sourceTree = "<group>"; };
 		CD9EB96C19ADF10E0003DB17 /* hax.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = hax.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -191,6 +193,7 @@
 		CD3E86DE19AE9E39002A5791 /* testData */ = {
 			isa = PBXGroup;
 			children = (
+				CD6ABEB919B7B626003D7CA1 /* nestedEmptyArray.json */,
 				CD44CFC919B0AF8C004129A6 /* numberWithTrailingComma.json */,
 				CD44CFC719B0ACCE004129A6 /* zeros.json */,
 				CD44CFC319B0AC01004129A6 /* decimal.json */,
@@ -343,6 +346,7 @@
 				CD3E86EC19AE9E39002A5791 /* simpleArray.json in Resources */,
 				CD44CFCA19B0AF8C004129A6 /* numberWithTrailingComma.json in Resources */,
 				CD5E956619AED63300A283C8 /* simpleMultipart2.json in Resources */,
+				CD6ABEBA19B7B626003D7CA1 /* nestedEmptyArray.json in Resources */,
 				CD44CFC819B0ACCE004129A6 /* zeros.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

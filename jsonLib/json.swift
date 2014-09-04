@@ -59,6 +59,8 @@ enum JSStateType: String, Printable {
     case Key = "key"
     case Value = "value"
     case JSString = "string"
+    case CharacterEscape = "charescape"
+    case Unicode = "unicode"
     case JSNumber = "number"
     case JSBool = "bool"
     case JSLiteral = "literal"
@@ -190,6 +192,26 @@ public class JSDecoder {
     }
 
 
+    func ishex( char: Character ) -> Bool {
+        // This code is duplicated a little bit because I didn't
+        // want to incur the expense of recomputing the unicodeScalarCodePoint()
+        // again by just reusing isnumber()
+        let codepoint = char.unicodeScalarCodePoint()
+        if ( codepoint >= 48 && codepoint < 58 ) {
+            return true
+        }
+        else if ( (codepoint >= 65) && (codepoint < 71) ) {
+            return true
+        }
+        else if ( (codepoint >= 97) && (codepoint < 103) ) {
+            return true
+        } 
+        else {
+            return false
+        }
+    }
+
+
     func endValue( context: JSContext ) -> Bool {
 
         // We just finished a string, number, or other value type
@@ -253,10 +275,11 @@ public class JSDecoder {
            
 
             case .JSArray:
-                top.array?.append( ( (objContext.array != nil) ? objContext.array : objContext.accum ))
-                var newState = JSState( state: .Comma, handler:commaHandler)
-                context.push( newState)
-                return true
+                if (objContext.array != nil) || (objContext.accum != nil) {
+                    top.array?.append( ( (objContext.array != nil) ? objContext.array : objContext.accum ))
+                }
+                
+                return endContainer( context)
 
 
             case .Value:
@@ -272,6 +295,7 @@ public class JSDecoder {
                 top.handler = finalHandler
                 return true
 
+                
             default:
                 return false
             }
@@ -296,7 +320,7 @@ public class JSDecoder {
             if let top = context.top() {
                 switch top.state {
                 case .JSObject:
-                    top.handler = keyHandler
+                    top.handler = objectHandler
                 case .JSArray:
                     var valContext = JSState( state: JSStateType.Value, handler:valueHandler)
                     context.push( valContext)
@@ -310,6 +334,7 @@ public class JSDecoder {
             context.pop()        
             return endContainer( context)
 
+            
         case "]":
             context.pop()
             return endContainer( context)
@@ -340,6 +365,160 @@ public class JSDecoder {
             return false
         }
     }
+    
+    
+    
+    
+    // 
+    // Exactly 4 hex chars make up the unicode escape
+    //
+    func unicodeHandler( context: JSContext, char: Character ) -> Bool {
+        println( "\(__FUNCTION__)(\(char))")
+
+        if !ishex( char) {
+            println( "invalid character in unicode character escape: \(char)")
+            return false
+        }
+
+        if var top = context.top() {
+            let numChars = countElements( top.str!)
+
+            switch numChars {
+                
+            case 3:
+                top.str?.append( char)
+                
+                let unescaped = Character( UnicodeScalar.convertFromExtendedGraphemeClusterLiteral( top.str!))
+                
+                context.pop()
+                if var strContext = context.top() {
+                    strContext.str?.append( unescaped)
+                }
+               
+               return true
+
+            default:
+                top.str?.append( char)
+                return true
+            }
+
+        }
+        else {
+            println( "\(__FUNCTION__): internal error")
+        }
+        
+        
+        return false
+    }
+    
+    
+    func unEscape( char: Character ) -> Character? {
+        switch char {
+        case "\"":
+            return "\""
+        case "\\":
+            return "\\"
+        case "/":
+            return "/"
+        case "b":
+            return "\u{0008}"  // backspace
+        case "f":
+            return "\u{000c}"  // formfeed
+        case "n":
+            return "\n"
+        case "r":
+            return "\r"
+        case "t":
+            return "\t"
+            
+        default:
+            return nil
+        }
+    }
+    
+    
+    func isEscape( char: Character ) -> Bool {
+        switch char {
+        case "\"":
+            return true
+        case "\\":
+            return true
+        case "/":
+            return true
+        case "b":
+            return true
+        case "f":
+            return true
+        case "n":
+            return true
+        case "r":
+            return true
+        case "t":
+            return true
+            
+        default:
+            return false
+        }
+    }
+    
+    //
+    // If we are in this state, we were accumulating a string value and encountered 
+    // a '\' escape character. Now we accumulate the escape sequence, and then push
+    // it back into the string in which this escape was found
+    //
+    // JSON only supports the following escapes
+    //
+    //    \"
+    //    \\
+    //    \/
+    //    \b
+    //    \f
+    //    \n
+    //    \r
+    //    \t
+    //    \u four-hex-digits
+    //
+    //
+    //  Interestingly, the Swift language spec only seems to support the 
+    // following character escapes:
+    //
+    //  \0­  \\­  \t­  \n­  \r­  \"­  \'­
+    //  
+    //  So \f and \b are not supported inherently; will use unicode escapes
+    //  for these.
+    //
+    func escapeHandler( context: JSContext, char: Character ) -> Bool {
+        println( "\(__FUNCTION__)(\(char))")
+        
+        let lambdaAppend = { (char: Character) -> Bool in
+            context.pop()
+            if var top = context.top() {
+                if let unescaped = self.unEscape( char) {
+                    top.str?.append( unescaped)
+                    return true
+                }
+            }
+
+            return false
+        }
+
+        
+        switch char {
+        case "u":
+            let uni = JSState( state: JSStateType.Unicode, handler: unicodeHandler)
+            uni.str = String()
+            context.push( uni)
+            return true
+        
+        case let c where isEscape( c):
+            return lambdaAppend( "\"")
+            
+        default:
+            println( "unexpected character in escape sequence: \(char)")
+            return false
+        }
+    
+    }
 
 
     func stringHandler( context: JSContext, char: Character ) -> Bool {
@@ -352,6 +531,13 @@ public class JSDecoder {
                 top.accum = strContext?.str
                 return endValue( context)
             }
+            
+            
+        case "\\":
+            let escapeContext = JSState(state: JSStateType.CharacterEscape, handler: escapeHandler)
+            escapeContext.str = String()
+            context.push( escapeContext)
+
 
         case let s where whitespace(s):
             break
@@ -453,7 +639,7 @@ public class JSDecoder {
 
         if let top = context.top() {
 
-            switch char  {
+            switch char {
 
             case ",":
                 if endNumberContext( context) {
@@ -463,7 +649,7 @@ public class JSDecoder {
                 }
                 
             case "}":
-                if endNumberContext( context) {
+            if endNumberContext( context) {
                     return commaHandler( context, char: char)
                 } else {
                     return false
@@ -471,6 +657,7 @@ public class JSDecoder {
                 
             case "]":
                 if endNumberContext( context) {
+                   
                     return commaHandler( context, char: char)
                 } else {
                     return false
@@ -497,6 +684,10 @@ public class JSDecoder {
         println( "\(__FUNCTION__)(\(char))")
 
         switch char {
+            
+        // If we are in an array context, it is possible to get a terminating ] immediately
+        case "]":
+            return endContainer( context)
 
         case "\"": 
             var strContext = JSState( state: JSStateType.JSString, handler: stringHandler)
@@ -536,7 +727,7 @@ public class JSDecoder {
             
         case "-":
             var ctxt = JSState( state: .JSNumber, handler: numberHandler)
-            ctxt.str = String(char)            
+            ctxt.str = String(char)
             context.push( ctxt)        
 
         case let d where isnumber(d):

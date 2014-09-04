@@ -118,9 +118,45 @@ class jsonLibTests: XCTestCase {
     }
     
     
-//    func testPerformanceExample() {
-//        self.measureBlock() {
-//        }
-//    }
+    func testNestedArray() {
+        var result: Any? = nil
+        
+        if let data = loadResourceFile( "nestedArray.json") {
+            let p = JSDecoder()
+            result = p.decode( data)
+            println( "RESULT: \(result)")
+        }
+        
+        XCTAssert( result != nil, "result should not be nil")
+        XCTAssert( result! is JSObject, "result should be a JSObject")
+        
+        let jsObj = result! as JSObject
+        
+        let arrValue = jsObj[ "test"]
+        XCTAssert( arrValue != nil, "value for test field should not be nil")
+        XCTAssert( arrValue! is JSArray, "value for test field should be JSArray")
+    }
+    
+    
+    func testNestedObject() {
+        var result: Any? = nil
+        
+        if let data = loadResourceFile( "nestedObject.json") {
+            let p = JSDecoder()
+            result = p.decode( data)
+            println( "RESULT: \(result)")
+        }
+        
+        XCTAssert( result != nil, "result should not be nil")
+        XCTAssert( result! is JSObject, "result should be a JSObject")
+        
+        let jsObj = result! as JSObject
+        
+        let objValue = jsObj[ "test"]
+        XCTAssert( objValue != nil, "value for test field should not be nil")
+        XCTAssert( objValue! is JSObject, "value for test field should be JSObject")
+        
+    }
+
     
 }
