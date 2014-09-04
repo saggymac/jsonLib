@@ -103,6 +103,12 @@ class JSState: Printable {
     func append( char: Character ) {
         str?.append( char)
     }
+
+    func append( aStr: String ) {
+        if var theString = str {
+            theString += aStr
+        }
+    }
 }
 
 
@@ -370,51 +376,15 @@ public class JSDecoder {
     // 
     // This is proving to be a real pain
     //
-    func unicodeScalarFromString( escapeString: String ) -> UnicodeScalar {
-        println( "\(__FUNCTION__): Not implemented yet")
-        return UnicodeScalar(0)
+    func unicodeFromString( escapeString: String ) -> UnicodeScalar {
+        let scanner = NSScanner( string: escapeString)
+        var result: UInt32 = 0
+        scanner.scanHexInt( &result)
+        
+        return UnicodeScalar( result)
     }
     
-    
-    
-    #if false
-    func unicodeScalarFromString( escapeString: String ) -> UnicodeScalar {
-        
-        let chars = escapeString.unicodeScalars
-        let charCount = countElements( chars)
-        
-        println( "CHAR COUNT: \(charCount)")
-                
-        var exp = UInt8( charCount - 1)
-        var scalar: UInt32 = 0
-        
-        for idx in chars.startIndex ..< chars.endIndex {
-            
-            var value: UInt32 = 0
-            
-            let cs = chars[idx].value
-            
-            if ( (cs >= 48) && (cs < 58) ) {
-                value = UInt32(cs - 48)
-            }
-            else if ( (cs >= 97) && (cs < 103) ) {
-                value = UInt32(cs - 97 + 10)
-            }
-            else if ( (cs >= 65) && (cs < 71) ) {
-                value = UInt32(cs - 65 + 10)
-            }
-            
-            scalar = scalar + ( value * UInt32( powf( 16, Float( exp))))
-            
-            --exp
-        }
-        
-        return UnicodeScalar( scalar)
-    }
-    #endif
-    
-    
-    
+
     // 
     // Exactly 4 hex chars make up the unicode escape
     //
@@ -434,7 +404,7 @@ public class JSDecoder {
             case 3:
                 top.append( char)
                 
-                let unescaped = Character( unicodeScalarFromString( top.str!))
+                let unescaped = unicodeFromString( top.str!)
                 
                 context.pop() // pops the unicode context
                 context.pop() // pops the escape context
@@ -442,7 +412,8 @@ public class JSDecoder {
                 // store the converted escape sequence in the string context that is
                 // now top
                 if var strContext = context.top() {
-                    strContext.append( unescaped)
+                    println( "Appending unicode: \(unescaped)")
+                    strContext.append( Character( unescaped))
                 }
                
                return true

@@ -33,7 +33,6 @@ class escapeTests: XCTestCase {
         if let data = loadResourceFile( "newlineEscape.json") {
             let p = JSDecoder()
             result = p.decode( data)
-            println( "RESULT: \(result)")
         }
         
         XCTAssert( result != nil, "result should not be nil")
@@ -55,10 +54,9 @@ class escapeTests: XCTestCase {
         
         var result: Any? = nil
         
-        if let data = loadResourceFile( "newlineEscape.json") {
+        if let data = loadResourceFile( "unicodeEscape.json") {
             let p = JSDecoder()
             result = p.decode( data)
-            println( "RESULT: \(result)")
         }
         
         XCTAssert( result != nil, "result should not be nil")
@@ -72,7 +70,7 @@ class escapeTests: XCTestCase {
         XCTAssert( valueObj! is String, "value should be a string")
         
         let str = valueObj as NSString
-        XCTAssert( str.containsString( "☺︎"), "value should contain a happy face")
+        XCTAssert( str.containsString( "\u{263A}"), "value should contain a happy face")
     }
     
     
