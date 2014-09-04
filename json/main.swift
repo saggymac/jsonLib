@@ -38,6 +38,8 @@ let data = NSData( contentsOfFile: filePath)
 let p = JSDecoder()	
 if let result = p.decode( data) {
     println( "RESULT: \(result)")    
+} else {
+    println( "no result")
 }
 
 

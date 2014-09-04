@@ -365,7 +365,53 @@ public class JSDecoder {
             return false
         }
     }
+
     
+    // 
+    // This is proving to be a real pain
+    //
+    func unicodeScalarFromString( escapeString: String ) -> UnicodeScalar {
+        println( "\(__FUNCTION__): Not implemented yet")
+        return UnicodeScalar(0)
+    }
+    
+    
+    
+    #if false
+    func unicodeScalarFromString( escapeString: String ) -> UnicodeScalar {
+        
+        let chars = escapeString.unicodeScalars
+        let charCount = countElements( chars)
+        
+        println( "CHAR COUNT: \(charCount)")
+                
+        var exp = UInt8( charCount - 1)
+        var scalar: UInt32 = 0
+        
+        for idx in chars.startIndex ..< chars.endIndex {
+            
+            var value: UInt32 = 0
+            
+            let cs = chars[idx].value
+            
+            if ( (cs >= 48) && (cs < 58) ) {
+                value = UInt32(cs - 48)
+            }
+            else if ( (cs >= 97) && (cs < 103) ) {
+                value = UInt32(cs - 97 + 10)
+            }
+            else if ( (cs >= 65) && (cs < 71) ) {
+                value = UInt32(cs - 65 + 10)
+            }
+            
+            scalar = scalar + ( value * UInt32( powf( 16, Float( exp))))
+            
+            --exp
+        }
+        
+        return UnicodeScalar( scalar)
+    }
+    #endif
     
     
     
@@ -386,19 +432,23 @@ public class JSDecoder {
             switch numChars {
                 
             case 3:
-                top.str?.append( char)
+                top.append( char)
                 
-                let unescaped = Character( UnicodeScalar.convertFromExtendedGraphemeClusterLiteral( top.str!))
+                let unescaped = Character( unicodeScalarFromString( top.str!))
                 
-                context.pop()
+                context.pop() // pops the unicode context
+                context.pop() // pops the escape context
+                
+                // store the converted escape sequence in the string context that is
+                // now top
                 if var strContext = context.top() {
-                    strContext.str?.append( unescaped)
+                    strContext.append( unescaped)
                 }
                
                return true
 
             default:
-                top.str?.append( char)
+                top.append( char)
                 return true
             }
 
@@ -511,7 +561,7 @@ public class JSDecoder {
             return true
         
         case let c where isEscape( c):
-            return lambdaAppend( "\"")
+            return lambdaAppend( c)
             
         default:
             println( "unexpected character in escape sequence: \(char)")
@@ -539,9 +589,6 @@ public class JSDecoder {
             context.push( escapeContext)
 
 
-        case let s where whitespace(s):
-            break
-            
         default:
             if var state = context.top() {
                 state.append( char)

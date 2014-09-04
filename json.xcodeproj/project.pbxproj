@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		CD08536B19ABB2F4003A0552 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD08536A19ABB2F4003A0552 /* main.swift */; };
+		CD0FAD6D19B87DD2001AA301 /* escapeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FAD6C19B87DD2001AA301 /* escapeTests.swift */; };
+		CD0FAD6F19B87E68001AA301 /* newlineEscape.json in Resources */ = {isa = PBXBuildFile; fileRef = CD0FAD6E19B87E68001AA301 /* newlineEscape.json */; };
+		CD0FAD7119B882B4001AA301 /* unicodeEscape.json in Resources */ = {isa = PBXBuildFile; fileRef = CD0FAD7019B882B4001AA301 /* unicodeEscape.json */; };
 		CD38190019B0234300D44975 /* numberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3818FF19B0234300D44975 /* numberTests.swift */; };
 		CD38190219B024A400D44975 /* int.json in Resources */ = {isa = PBXBuildFile; fileRef = CD38190119B024A400D44975 /* int.json */; };
 		CD3E86C419AE9C51002A5791 /* jsonLib.h in Headers */ = {isa = PBXBuildFile; fileRef = CD3E86C319AE9C51002A5791 /* jsonLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -66,6 +69,9 @@
 /* Begin PBXFileReference section */
 		CD08536719ABB2F4003A0552 /* json */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = json; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD08536A19ABB2F4003A0552 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		CD0FAD6C19B87DD2001AA301 /* escapeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = escapeTests.swift; sourceTree = "<group>"; };
+		CD0FAD6E19B87E68001AA301 /* newlineEscape.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = newlineEscape.json; sourceTree = "<group>"; };
+		CD0FAD7019B882B4001AA301 /* unicodeEscape.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unicodeEscape.json; sourceTree = "<group>"; };
 		CD3818FF19B0234300D44975 /* numberTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = numberTests.swift; sourceTree = "<group>"; };
 		CD38190119B024A400D44975 /* int.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = int.json; sourceTree = "<group>"; };
 		CD3E86BF19AE9C51002A5791 /* jsonLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = jsonLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,6 +182,7 @@
 				CD3E86CD19AE9C51002A5791 /* jsonLibTests.swift */,
 				CD5E956119AECF7900A283C8 /* streamingTests.swift */,
 				CD3818FF19B0234300D44975 /* numberTests.swift */,
+				CD0FAD6C19B87DD2001AA301 /* escapeTests.swift */,
 				CD3E86EF19AE9E6C002A5791 /* testHelpers.swift */,
 				CD3E86CB19AE9C51002A5791 /* Supporting Files */,
 			);
@@ -193,6 +200,7 @@
 		CD3E86DE19AE9E39002A5791 /* testData */ = {
 			isa = PBXGroup;
 			children = (
+				CD0FAD7019B882B4001AA301 /* unicodeEscape.json */,
 				CD6ABEB919B7B626003D7CA1 /* nestedEmptyArray.json */,
 				CD44CFC919B0AF8C004129A6 /* numberWithTrailingComma.json */,
 				CD44CFC719B0ACCE004129A6 /* zeros.json */,
@@ -209,6 +217,7 @@
 				CD3E86E419AE9E39002A5791 /* simpleArray.json */,
 				CD3E86E519AE9E39002A5791 /* simpleObject.json */,
 				CD3E86E619AE9E39002A5791 /* true.json */,
+				CD0FAD6E19B87E68001AA301 /* newlineEscape.json */,
 			);
 			path = testData;
 			sourceTree = "<group>";
@@ -334,6 +343,7 @@
 			files = (
 				CD3E86ED19AE9E39002A5791 /* simpleObject.json in Resources */,
 				CD3E86EE19AE9E39002A5791 /* true.json in Resources */,
+				CD0FAD7119B882B4001AA301 /* unicodeEscape.json in Resources */,
 				CD3E86EA19AE9E39002A5791 /* null.json in Resources */,
 				CD44CFC519B0AC01004129A6 /* decimal.json in Resources */,
 				CD3E86EB19AE9E39002A5791 /* objectInArray.json in Resources */,
@@ -348,6 +358,7 @@
 				CD5E956619AED63300A283C8 /* simpleMultipart2.json in Resources */,
 				CD6ABEBA19B7B626003D7CA1 /* nestedEmptyArray.json in Resources */,
 				CD44CFC819B0ACCE004129A6 /* zeros.json in Resources */,
+				CD0FAD6F19B87E68001AA301 /* newlineEscape.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +386,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD38190019B0234300D44975 /* numberTests.swift in Sources */,
+				CD0FAD6D19B87DD2001AA301 /* escapeTests.swift in Sources */,
 				CD3E86CE19AE9C51002A5791 /* jsonLibTests.swift in Sources */,
 				CD3E86F019AE9E6C002A5791 /* testHelpers.swift in Sources */,
 				CD5E956219AECF7900A283C8 /* streamingTests.swift in Sources */,
@@ -489,6 +501,7 @@
 		CD3E86D019AE9C51002A5791 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -505,6 +518,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -513,6 +527,7 @@
 		CD3E86D119AE9C51002A5791 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
